@@ -18,6 +18,7 @@ const sections = document.querySelectorAll('.text-section');
 // ===================================
 // PARTICLE SYSTEM (ROSES & NOTES)
 // ===================================
+const ROSE_IMAGE_SRC = 'assets/images/blue-rose.png';
 const particleTypes = {
     roses: ['🌹', '🥀', '💙'],
     notes: ['♪', '♫', '♬', '♩']
@@ -29,18 +30,51 @@ function createParticle() {
     
     // Randomly choose between rose and note
     const isNote = Math.random() > 0.5;
-    const typeArray = isNote ? particleTypes.notes : particleTypes.roses;
-    const symbol = typeArray[Math.floor(Math.random() * typeArray.length)];
     
-    particle.textContent = symbol;
-    particle.classList.add(isNote ? 'note' : 'rose');
+    if (isNote) {
+        const symbol = particleTypes.notes[Math.floor(Math.random() * particleTypes.notes.length)];
+        particle.textContent = symbol;
+        particle.classList.add('note');
+        const size = Math.random() * 1.5 + 0.8;
+        particle.style.fontSize = size + 'rem';
+        const blueShades = [
+            'rgba(85, 136, 163, 0.7)',
+            'rgba(126, 168, 190, 0.7)',
+            'rgba(15, 52, 96, 0.8)',
+            'rgba(94, 156, 190, 0.6)'
+        ];
+        particle.style.color = blueShades[Math.floor(Math.random() * blueShades.length)];
+    } else {
+        particle.classList.add('rose');
+        // Randomly use PNG image OR emoji
+        const usePng = Math.random() > 0.5;
+        if (usePng) {
+            const img = document.createElement('img');
+            img.src = ROSE_IMAGE_SRC;
+            img.alt = '';
+            img.className = 'particle-rose-img';
+            const sizePx = Math.floor(Math.random() * 40 + 25); // 25–65px
+            img.style.width = sizePx + 'px';
+            img.style.height = 'auto';
+            img.style.opacity = (Math.random() * 0.4 + 0.5).toFixed(2); // 0.5–0.9
+            particle.appendChild(img);
+        } else {
+            const symbol = particleTypes.roses[Math.floor(Math.random() * particleTypes.roses.length)];
+            particle.textContent = symbol;
+            const size = Math.random() * 1.5 + 0.8;
+            particle.style.fontSize = size + 'rem';
+            const blueShades = [
+                'rgba(85, 136, 163, 0.7)',
+                'rgba(126, 168, 190, 0.7)',
+                'rgba(15, 52, 96, 0.8)',
+                'rgba(94, 156, 190, 0.6)'
+            ];
+            particle.style.color = blueShades[Math.floor(Math.random() * blueShades.length)];
+        }
+    }
     
     // Random positioning
     particle.style.left = Math.random() * 100 + '%';
-    
-    // Random size
-    const size = Math.random() * 1.5 + 0.8; // 0.8 to 2.3
-    particle.style.fontSize = size + 'rem';
     
     // Random animation
     const animations = ['floatUp', 'floatUpLeft', 'floatUpWave'];
@@ -54,15 +88,6 @@ function createParticle() {
     // Random delay
     const delay = Math.random() * 5;
     particle.style.animationDelay = delay + 's';
-    
-    // Random color variation
-    const blueShades = [
-        'rgba(85, 136, 163, 0.7)',
-        'rgba(126, 168, 190, 0.7)',
-        'rgba(15, 52, 96, 0.8)',
-        'rgba(94, 156, 190, 0.6)'
-    ];
-    particle.style.color = blueShades[Math.floor(Math.random() * blueShades.length)];
     
     particlesContainer.appendChild(particle);
     
@@ -111,7 +136,12 @@ function showMusicError() {
     console.log('Music file not available yet');
 }
 
-// Try to start music when the page loads (may be blocked by browser autoplay policy)
+function updateVolume() {
+    const volume = volumeControl.value / 100;
+    backgroundMusic.volume = volume;
+}
+
+// Try to play music as soon as the page loads (browsers may block until user taps/clicks)
 function tryAutoplay() {
     backgroundMusic.volume = volumeControl.value / 100;
     const promise = backgroundMusic.play();
@@ -121,18 +151,10 @@ function tryAutoplay() {
                 musicPlaying = true;
                 musicToggle.classList.add('playing');
             })
-            .catch((err) => {
-                // NotAllowedError = browser blocked autoplay (user must click first) – normal, don't log
-                if (err.name !== 'NotAllowedError') {
-                    console.log('Music could not play:', err.message || err);
-                }
+            .catch(() => {
+                // NotAllowedError = autoplay blocked; user can tap the ♪ button
             });
     }
-}
-
-function updateVolume() {
-    const volume = volumeControl.value / 100;
-    backgroundMusic.volume = volume;
 }
 
 // ===================================
@@ -213,8 +235,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Set initial volume
     backgroundMusic.volume = volumeControl.value / 100;
     
-    // Try to play music as soon as she opens the site (may be blocked on some browsers until first click)
-    setTimeout(tryAutoplay, 300);
+    // Start playing music when the site opens (may be blocked until first click on some browsers)
+    setTimeout(tryAutoplay, 400);
     
     // Reveal first section automatically
     const firstSection = document.querySelector('[data-section="1"]');

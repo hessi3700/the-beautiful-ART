@@ -75,8 +75,18 @@ body {
 }
 
 .particle.rose {
-    font-size: 2rem;
-    filter: blur(0.5px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.particle-rose-img {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 0 8px rgba(85, 136, 163, 0.5));
+    pointer-events: none;
 }
 
 .particle.note {
