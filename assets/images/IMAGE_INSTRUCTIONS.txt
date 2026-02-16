@@ -1,0 +1,118 @@
+🌹 OPTIONAL: ADD BLUE ROSE IMAGES HERE 🌹
+
+The website currently uses beautiful emoji roses (🌹💙) which work perfectly!
+But if you want to add actual blue rose images, follow these instructions:
+
+==================================================
+WHERE TO FIND FREE BLUE ROSE IMAGES
+==================================================
+
+Option A: UNSPLASH (Highest Quality)
+→ https://unsplash.com/s/photos/blue-roses
+- Completely free, no attribution required
+- High resolution
+- Search: "blue roses", "blue flowers", "blue petals"
+
+Option B: PEXELS
+→ https://www.pexels.com/search/blue%20rose/
+- Free to use
+- Good variety
+- Download in medium resolution (faster loading)
+
+Option C: PIXABAY
+→ https://pixabay.com/images/search/blue%20roses/
+- Free with transparent backgrounds available
+- Search: "blue rose transparent"
+
+==================================================
+WHAT TO DOWNLOAD
+==================================================
+
+Recommended images:
+1. Blue rose close-up (for decorative elements)
+2. Blue rose petals (transparent PNG if possible)
+3. Blue roses bouquet (optional for background)
+
+File formats:
+✓ PNG (especially for transparent petals)
+✓ JPG (for backgrounds)
+✓ Keep file sizes under 500KB each
+
+==================================================
+HOW TO ADD IMAGES TO YOUR WEBSITE
+==================================================
+
+Option 1: Add a Background Image
+Open styles.css and add to the body section:
+
+body {
+    background-image: url('../images/blue-roses-bg.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-blend-mode: multiply;
+}
+
+Option 2: Add Decorative Roses
+Open index.html and add where you want roses:
+
+<img src="assets/images/rose-1.png" class="decorative-rose" alt="Blue rose">
+
+Then in styles.css:
+
+.decorative-rose {
+    width: 100px;
+    opacity: 0.3;
+    position: absolute;
+    /* Position as desired */
+}
+
+Option 3: Replace Emoji Particles
+In script.js, find the particleTypes object and modify:
+
+const particleTypes = {
+    roses: ['<img src="assets/images/petal.png">', ...],
+    notes: ['♪', '♫', '♬', '♩']
+};
+
+==================================================
+RECOMMENDED SEARCHES
+==================================================
+
+On Unsplash/Pexels/Pixabay, try:
+- "blue roses"
+- "blue flower petals"
+- "blue rose macro"
+- "indigo flowers"
+- "blue botanical"
+- "cyan roses"
+
+Tips:
+- Look for images with dark backgrounds (blend better)
+- Transparent PNGs are best for petals
+- Don't need super high resolution (1920px max width)
+- 2-5 images is plenty
+
+==================================================
+CURRENT EMOJI APPROACH
+==================================================
+
+The site currently uses:
+🌹 - Classic rose emoji
+💙 - Blue heart (represents blue rose)
+🥀 - Wilted rose (for variety)
+
+These work great because:
+✓ No download needed
+✓ Instant loading
+✓ Consistent across devices
+✓ Already perfectly styled
+
+You only need real images if you want:
+- Photo-realistic roses
+- Specific artistic style
+- Professional photography look
+
+==================================================
+
+💙 The choice is yours! Both approaches are beautiful.

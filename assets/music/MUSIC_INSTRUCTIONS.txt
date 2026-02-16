@@ -1,0 +1,89 @@
+🎵 ADD YOUR BACKGROUND MUSIC HERE 🎵
+
+Browsers BLOCK loading audio from external sites (CORS). You must
+put the MP3 file in this folder for the music to work.
+
+==================================================
+YOUR TRACK: "Let Me Follow"
+==================================================
+
+1. Open this link in your browser:
+   https://uupload.ir/view/let_me_follow_spotdown.org_3vef.mp3/
+
+2. On that page, click the DOWNLOAD link (e.g. "دریافت لینک دانلود"
+   or "Get download link") and download the MP3 file.
+
+3. Rename the downloaded file to exactly: background.mp3
+
+4. Put background.mp3 in THIS folder:
+   assets/music/
+
+5. Refresh your website. Click the ♪ button – music will play.
+
+==================================================
+WHY THE URL DIDN'T WORK
+==================================================
+
+The direct URL to the MP3 cannot be used in the <audio> tag because:
+• The server (uupload.ir) does not send CORS headers
+• Browsers block this as "OpaqueResponseBlocking"
+• So the file must be downloaded and served from your own site
+
+==================================================
+OTHER MUSIC SOURCES (if you want a different track)
+==================================================
+
+Option A: PIXABAY MUSIC (No attribution needed)
+→ https://pixabay.com/music/
+Search: "romantic piano", "soft instrumental"
+
+Option B: FREE MUSIC ARCHIVE
+→ https://freemusicarchive.org/
+Filter by: "Ambient", "Chill Out"
+
+==================================================
+STEP 3: Add to Your Website
+==================================================
+
+1. Rename your chosen file to: background.mp3
+2. Place it in THIS folder (assets/music/)
+3. Refresh your website
+
+That's it! The music will now play when visitors click the music button.
+
+==================================================
+RECOMMENDED TRACKS (Search for these)
+==================================================
+
+From Pixabay:
+- "Dreamy Piano" by Keys of Moon
+- "Romantic Piano" by Alexey Anisimov  
+- "Soft Piano" by AudioCoffee
+- "Blue Mood" by various artists
+- "Tender Love" by various artists
+
+Style recommendations:
+✓ Soft piano instrumental
+✓ Ambient/atmospheric
+✓ Lo-fi romantic beats
+✓ Gentle acoustic guitar
+✗ Avoid: vocals, heavy beats, energetic music
+
+==================================================
+TROUBLESHOOTING
+==================================================
+
+Music not playing?
+- Make sure the file is named exactly: background.mp3
+- Check that it's in the assets/music/ folder
+- Try refreshing the page (Ctrl+F5 or Cmd+Shift+R)
+- Click the music button (🎵) on the website
+
+Still not working?
+- Open browser console (F12) and check for errors
+- Make sure the file is actually an MP3
+- Try a different music file
+
+==================================================
+
+💙 This music will set the mood for your romantic message!

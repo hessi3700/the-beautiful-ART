@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A love letter to Artemis - You, My Blue Note">
+    <title>You, My Blue Note</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=Montserrat:wght@300;400&display=swap" rel="stylesheet">
+    
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Floating Particles Background -->
+    <div class="particles-container" id="particles"></div>
+    
+    <!-- Music Control -->
+    <div class="music-control" id="musicControl">
+        <button id="musicToggle" class="music-btn" aria-label="Toggle music">
+            <span class="music-icon">♪</span>
+        </button>
+        <input type="range" id="volumeControl" class="volume-slider" min="0" max="100" value="30" aria-label="Volume control">
+    </div>
+    
+    <!-- Main Content -->
+    <main class="content-wrapper">
+        <div class="content-container">
+            <!-- Title Section -->
+            <header class="title-section fade-in">
+                <h1 class="main-title">You, My Blue Note</h1>
+                <p class="subtitle">The tone that changed everything</p>
+            </header>
+            
+            <!-- Message Sections -->
+            <article class="message-content">
+                <!-- Section 1 - Auto reveal -->
+                <section class="text-section visible" data-section="1">
+                    <p class="text-block">I don't think I say this enough, so I'm writing it instead.</p>
+                    <p class="text-block">I appreciate the way you exist.</p>
+                </section>
+                
+                <!-- Section 2 -->
+                <section class="text-section" data-section="2">
+                    <p class="text-block">Not loudly.<br>
+                    Not in a way that tries to own the room.<br>
+                    But in the way a blue note bends a melody — subtle, a little aching, and suddenly everything feels more honest because of it.</p>
+                </section>
+                
+                <!-- Section 3 -->
+                <section class="text-section" data-section="3">
+                    <p class="text-block">You move through things quietly, even when they're heavy.<br>
+                    You don't dramatize your strength.<br>
+                    You just carry it.</p>
+                </section>
+                
+                <!-- Section 4 -->
+                <section class="text-section" data-section="4">
+                    <p class="text-block">I respect your pace.<br>
+                    Your "slow."<br>
+                    Your "not yet."<br>
+                    The way you refuse to rush something just because the world expects you to.</p>
+                    
+                    <p class="text-block">That's not distance.<br>
+                    That's self-knowledge.</p>
+                </section>
+                
+                <!-- Section 5 -->
+                <section class="text-section" data-section="5">
+                    <p class="text-block">There's something steady about you, Artemis.<br>
+                    Not cold. Not distant.<br>
+                    Just grounded in who you are.</p>
+                </section>
+                
+                <!-- Section 6 -->
+                <section class="text-section" data-section="6">
+                    <p class="text-block">You don't try to be someone's rescue.<br>
+                    You don't pretend to be perfect.<br>
+                    You're real — and that kind of realness is rare.</p>
+                </section>
+                
+                <!-- Section 7 -->
+                <section class="text-section" data-section="7">
+                    <p class="text-block">You've become like a blue note in my life.<br>
+                    Not loud, not demanding attention.<br>
+                    Just the tone that makes everything else sound truer.</p>
+                </section>
+                
+                <!-- Section 8 -->
+                <section class="text-section" data-section="8">
+                    <p class="text-block">I don't need speed.<br>
+                    I don't need promises.</p>
+                    
+                    <p class="text-block highlight">I just want you to know this is genuine:</p>
+                </section>
+                
+                <!-- Section 9 - Final -->
+                <section class="text-section final-section" data-section="9">
+                    <p class="text-block emphasis">You matter to me.<br>
+                    Not because of what you give.<br>
+                    Not because of what you fix.<br>
+                    Just because you're you.</p>
+                    
+                    <p class="text-block final-message">And I'm grateful I get to know you.</p>
+                </section>
+            </article>
+            
+            <!-- Continue Indicator -->
+            <div class="continue-indicator" id="continueIndicator">
+                <span class="continue-text">Click to continue...</span>
+                <span class="continue-dots">...</span>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Audio Element -->
+    <audio id="backgroundMusic" loop preload="auto">
+        <source src="assets/music/background.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+    
+    <!-- JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>
