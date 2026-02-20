@@ -2,8 +2,11 @@
 // STATE MANAGEMENT
 // ===================================
 let currentSection = 1;
-let totalSections = 9;
+let totalSections = 12;
+let currentLetter = 'current'; // 'current' | 'previous'
 let musicPlaying = false;
+
+const LETTER_SECTIONS = { current: 12, previous: 9 };
 
 // ===================================
 // DOM ELEMENTS
@@ -13,7 +16,10 @@ const volumeControl = document.getElementById('volumeControl');
 const backgroundMusic = document.getElementById('backgroundMusic');
 const continueIndicator = document.getElementById('continueIndicator');
 const particlesContainer = document.getElementById('particles');
-const sections = document.querySelectorAll('.text-section');
+const letterCurrentEl = document.getElementById('letterCurrent');
+const letterPreviousEl = document.getElementById('letterPrevious');
+const btnPrevLetter = document.getElementById('btnPrevLetter');
+const btnCurrentLetter = document.getElementById('btnCurrentLetter');
 
 // ===================================
 // PARTICLE SYSTEM (ROSES & NOTES)
@@ -160,34 +166,65 @@ function tryAutoplay() {
 // ===================================
 // TEXT REVEAL SYSTEM
 // ===================================
+function getActiveLetterEl() {
+    return currentLetter === 'current' ? letterCurrentEl : letterPreviousEl;
+}
+
 function revealNextSection() {
+    const letterEl = getActiveLetterEl();
+    if (!letterEl) return;
+
     if (currentSection < totalSections) {
         currentSection++;
-        const nextSection = document.querySelector(`[data-section="${currentSection}"]`);
+        const nextSection = letterEl.querySelector(`.text-section[data-section="${currentSection}"]`);
         
         if (nextSection) {
-            // Reveal the section
+            nextSection.classList.add('visible');
             setTimeout(() => {
-                nextSection.classList.add('visible');
-            }, 100);
-            
-            // Smooth scroll to the new section
-            setTimeout(() => {
-                nextSection.scrollIntoView({ 
-                    behavior: 'smooth', 
-                    block: 'center' 
-                });
-            }, 200);
+                nextSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 80);
         }
         
-        // Hide continue indicator on last section
         if (currentSection === totalSections) {
             continueIndicator.classList.add('hidden');
-            
-            // Final animation - make particles more dramatic
+            if (currentLetter === 'current') {
+                btnPrevLetter.classList.add('visible');
+                btnCurrentLetter.classList.remove('visible');
+            } else {
+                btnCurrentLetter.classList.add('visible');
+                btnPrevLetter.classList.remove('visible');
+            }
             createFinalAnimation();
         }
     }
+}
+
+function switchToLetter(letter) {
+    currentLetter = letter;
+    totalSections = LETTER_SECTIONS[letter];
+    currentSection = 1;
+    
+    const showEl = letter === 'current' ? letterCurrentEl : letterPreviousEl;
+    const hideEl = letter === 'current' ? letterPreviousEl : letterCurrentEl;
+    
+    hideEl.classList.add('letter-hidden');
+    hideEl.querySelectorAll('.text-section.visible').forEach(s => s.classList.remove('visible'));
+    
+    showEl.classList.remove('letter-hidden');
+    showEl.querySelectorAll('.text-section').forEach((s, i) => {
+        s.classList.toggle('visible', parseInt(s.dataset.section, 10) === 1);
+    });
+    
+    continueIndicator.classList.remove('hidden');
+    btnPrevLetter.classList.remove('visible');
+    btnCurrentLetter.classList.remove('visible');
+    
+    const newSrc = letter === 'current' ? MUSIC_CURRENT : MUSIC_PREVIOUS;
+    backgroundMusic.src = newSrc;
+    backgroundMusic.load();
+    if (musicPlaying) backgroundMusic.play().catch(() => {});
+    
+    showEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 function createFinalAnimation() {
@@ -203,21 +240,161 @@ function createFinalAnimation() {
 // EVENT LISTENERS
 // ===================================
 
+// ===================================
+// OPENING OVERLAY & EXPLOSION
+// ===================================
+const openingOverlay = document.getElementById('openingOverlay');
+const openingCta = document.getElementById('openingCta');
+const openingContent = document.getElementById('openingContent');
+const explosionDedication = document.getElementById('explosionDedication');
+const explosionContainer = document.getElementById('explosionContainer');
+
+const MUSIC_CURRENT = 'assets/music/background2.mp3';
+const MUSIC_PREVIOUS = 'assets/music/background.mp3';
+
+const EXPLOSION_ROSES = ['🌹', '🥀', '💙'];
+const EXPLOSION_NOTES = ['♪', '♫', '♬', '♩'];
+
+/** Fairy flight path: smooth arc across the screen (like a fairy flying and leaving sparkles) */
+function getFairyPathPoints() {
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+    const points = [];
+    const steps = 28;
+    for (let i = 0; i <= steps; i++) {
+        const t = i / steps;
+        const t2 = t * Math.PI;
+        const x = w * (0.15 + t * 0.7) + Math.sin(t2) * w * 0.06;
+        const y = h * (0.42 - Math.sin(t2) * 0.18) + (1 - t) * h * 0.04;
+        points.push({ x, y });
+    }
+    return points;
+}
+
+/** One sparkle left behind at (spawnX, spawnY); it drifts gently and fades */
+function createExplosionParticle(type, spawnX, spawnY) {
+    const el = document.createElement('div');
+    el.className = 'explosion-particle';
+
+    el.style.left = spawnX + 'px';
+    el.style.top = spawnY + 'px';
+
+    const driftX = (Math.random() - 0.5) * 48;
+    const driftY = 25 + Math.random() * 75;
+    const rot = (Math.random() - 0.5) * 60;
+
+    el.style.setProperty('--ex-dx', driftX + 'px');
+    el.style.setProperty('--ex-dy', driftY + 'px');
+    el.style.setProperty('--ex-rot', rot + 'deg');
+    el.style.animationDuration = (1.7 + Math.random() * 0.5) + 's';
+    el.style.animationDelay = (Math.random() * 0.05) + 's';
+
+    if (type === 'rose-emoji') {
+        el.classList.add('rose-emoji');
+        el.textContent = EXPLOSION_ROSES[Math.floor(Math.random() * EXPLOSION_ROSES.length)];
+        el.style.fontSize = (1 + Math.random() * 1.2) + 'rem';
+    } else if (type === 'note') {
+        el.classList.add('note-emoji');
+        el.textContent = EXPLOSION_NOTES[Math.floor(Math.random() * EXPLOSION_NOTES.length)];
+        el.style.fontSize = (1.2 + Math.random() * 1) + 'rem';
+    } else {
+        el.classList.add('rose-img');
+        const img = document.createElement('img');
+        img.src = ROSE_IMAGE_SRC;
+        img.alt = '';
+        el.appendChild(img);
+    }
+
+    explosionContainer.appendChild(el);
+    setTimeout(() => el.remove(), 3200);
+}
+
+let explosionStarted = false;
+
+function runExplosionAndDismiss() {
+    if (!openingOverlay || openingOverlay.classList.contains('dismissed') || explosionStarted) return;
+    explosionStarted = true;
+
+    openingCta.style.opacity = '0';
+    openingCta.style.pointerEvents = 'none';
+    if (openingContent) openingContent.style.opacity = '0';
+    if (explosionDedication) explosionDedication.classList.add('visible');
+
+    const path = getFairyPathPoints();
+    const pathLen = path.length;
+    let totalSpawned = 0;
+    const spawnInterval = 28;
+    const totalDuration = pathLen * spawnInterval;
+
+    for (let i = 0; i < pathLen; i++) {
+        const point = path[i];
+        const countHere = i === 0 || i === pathLen - 1 ? 1 : 2;
+        for (let k = 0; k < countHere; k++) {
+            const delay = i * spawnInterval + k * (spawnInterval / 2);
+            setTimeout(() => {
+                const r = Math.random();
+                const type = r < 0.4 ? 'rose-emoji' : r < 0.78 ? 'note' : 'rose-img';
+                const jitterX = (Math.random() - 0.5) * 16;
+                const jitterY = (Math.random() - 0.5) * 12;
+                createExplosionParticle(type, point.x + jitterX, point.y + jitterY);
+            }, delay);
+            totalSpawned++;
+        }
+    }
+
+    setTimeout(() => {
+        openingOverlay.classList.add('dismissed');
+        document.body.classList.remove('overlay-active');
+        tryAutoplay();
+    }, totalDuration + 1800);
+}
+
+function initOpeningOverlay() {
+    if (!openingOverlay) return;
+
+    const handleClick = (e) => {
+        if (e.target.closest('.opening-cta') || e.target === openingOverlay) {
+            e.preventDefault();
+            runExplosionAndDismiss();
+            openingOverlay.removeEventListener('click', handleClick);
+            openingCta.removeEventListener('click', handleClick);
+        }
+    };
+
+    openingOverlay.addEventListener('click', handleClick);
+    openingCta.addEventListener('click', (e) => {
+        e.stopPropagation();
+        runExplosionAndDismiss();
+    });
+
+    openingOverlay.addEventListener('touchend', (e) => {
+        if (e.changedTouches && e.changedTouches[0]) {
+            const t = e.changedTouches[0];
+            runExplosionAndDismiss();
+            openingOverlay.removeEventListener('click', handleClick);
+        }
+    }, { passive: true });
+}
+
 // Music controls
 musicToggle.addEventListener('click', toggleMusic);
 volumeControl.addEventListener('input', updateVolume);
 
 // Text reveal - click anywhere or on indicator
 document.addEventListener('click', (e) => {
-    // Don't trigger if clicking on music controls
-    if (!e.target.closest('.music-control')) {
-        revealNextSection();
-    }
+    if (document.body.classList.contains('overlay-active')) return;
+    if (e.target.closest('.music-control') || e.target.closest('.letter-switch-btn')) return;
+    revealNextSection();
 });
+
+// Letter switching
+if (btnPrevLetter) btnPrevLetter.addEventListener('click', (e) => { e.stopPropagation(); switchToLetter('previous'); });
+if (btnCurrentLetter) btnCurrentLetter.addEventListener('click', (e) => { e.stopPropagation(); switchToLetter('current'); });
 
 // Also allow keyboard navigation (Space or Enter)
 document.addEventListener('keydown', (e) => {
     if (e.key === ' ' || e.key === 'Enter') {
+        if (document.activeElement && document.activeElement.closest('.letter-switch-btn')) return;
         e.preventDefault();
         revealNextSection();
     }
@@ -229,14 +406,9 @@ document.addEventListener('keydown', (e) => {
 document.addEventListener('DOMContentLoaded', () => {
     console.log('Website loaded - You, My Blue Note');
     
-    // Initialize particles
+    initOpeningOverlay();
     initParticles();
-    
-    // Set initial volume
     backgroundMusic.volume = volumeControl.value / 100;
-    
-    // Start playing music when the site opens (may be blocked until first click on some browsers)
-    setTimeout(tryAutoplay, 400);
     
     // Reveal first section automatically
     const firstSection = document.querySelector('[data-section="1"]');
@@ -305,9 +477,8 @@ document.addEventListener('touchend', (e) => {
     const deltaX = touchEndX - touchStartX;
     const deltaY = touchEndY - touchStartY;
     
-    // If it's a tap (not a swipe)
     if (Math.abs(deltaX) < 10 && Math.abs(deltaY) < 10) {
-        if (!e.target.closest('.music-control')) {
+        if (!e.target.closest('.music-control') && !e.target.closest('.letter-switch-btn')) {
             revealNextSection();
         }
     }
